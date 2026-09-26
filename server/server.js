@@ -3,9 +3,13 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 
+import connectDB from "./config/db.js";
+
 dotenv.config();
 
 const app = express();
+
+connectDB();
 
 // Middleware
 app.use(cors());
