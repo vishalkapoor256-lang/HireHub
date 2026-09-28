@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 
 import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js"
 
 dotenv.config();
 
@@ -15,6 +16,9 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 app.use(helmet());
+
+//  Routes
+app.use("/api/auth", authRoutes)
 
 //Test route
 app.get("/", (req, res)=>{
