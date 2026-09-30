@@ -5,6 +5,7 @@ import helmet from "helmet";
 
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js"
+import jobRoutes from "./routes/jobRoutes.js"
 
 dotenv.config();
 
@@ -18,7 +19,8 @@ app.use(express.json());
 app.use(helmet());
 
 //  Routes
-app.use("/api/auth", authRoutes)
+app.use("/api/auth", authRoutes);
+app.use("/api/jobs", jobRoutes);
 
 //Test route
 app.get("/", (req, res)=>{
