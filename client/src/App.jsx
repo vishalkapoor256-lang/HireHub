@@ -13,6 +13,7 @@ import MyApplications from "./pages/MyApplications/MyApplications";
 import RecruiterDashboard from "./pages/RecruiterDashboard/RecruiterDashboard";
 import RecruiterCreateJob from "./pages/RecruiterCreateJob/RecruiterCreateJob";
 import RecruiterApplicants from "./pages/RecruiterApplicants/RecruiterApplicants";
+import JobseekerDashboard from "./pages/JobseekerDashboard/JobseekerDashboard";
 
 const App = () => {
   return (
@@ -25,6 +26,9 @@ const App = () => {
         <Route path="/jobs" element={<Jobs />} />
 
         <Route element={<ProtectedRoute />}>
+
+        <Route path="/dashboard" element={<JobseekerDashboard />} />
+        
           <Route path="/jobs/:id" element={<JobDetails />} />
 
           <Route path="/my-applications" element={<MyApplications />} />

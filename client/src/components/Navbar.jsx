@@ -65,9 +65,12 @@ const Navbar = () => {
             <>
               {/* Job Seeker */}
               {user?.role === "jobseeker" && (
+                <>
+                <Link to="/dashboard">Dashboard</Link>
                 <Link to="/my-applications">
                   My Applications
                 </Link>
+                </>
               )}
 
               {/* Recruiter */}
