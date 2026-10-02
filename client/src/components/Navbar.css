@@ -1,105 +1,420 @@
+/* =========================================
+   HIREHUB NAVBAR
+========================================= */
+
 .navbar {
-  width: 100%;
-  border-bottom: 1px solid #e5e7eb;
-  background: #ffffff;
   position: sticky;
   top: 0;
   z-index: 1000;
+
+  width: 100%;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border-bottom: 1px solid #e5e7eb;
+
+  backdrop-filter: blur(10px);
 }
 
 .navbar-container {
-  max-width: 1200px;
-  margin: auto;
-  height: 72px;
+  width: 100%;
+  max-width: 1280px;
+
+  min-height: 72px;
+
+  margin: 0 auto;
+
   padding: 0 24px;
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+
+  gap: 28px;
 }
+
+
+/* =========================================
+   LOGO
+========================================= */
 
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+
+  gap: 9px;
 
   text-decoration: none;
-  color: #111827;
-  font-size: 22px;
-  font-weight: 700;
+
+  flex-shrink: 0;
 }
 
-.navbar-search {
-  flex: 1;
-  max-width: 400px;
+.navbar-logo-icon {
+  width: 38px;
+  height: 38px;
 
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
 
-  background: #f3f4f6;
-  padding: 11px 15px;
-  border-radius: 8px;
+  border-radius: 10px;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.navbar-logo-text {
+  font-size: 21px;
+
+  font-weight: 800;
+
+  letter-spacing: -0.5px;
+
+  color: #111827;
+}
+
+.navbar-logo-text span {
+  color: #2563eb;
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+.navbar-search {
+  width: 280px;
+
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 13px;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 9px;
+
+  background: #f8fafc;
+
+  color: #6b7280;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.navbar-search:focus-within {
+  background: #ffffff;
+
+  border-color: #2563eb;
+
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .navbar-search input {
   width: 100%;
+
   border: none;
+
   outline: none;
+
   background: transparent;
+
+  padding: 0;
+
   font-size: 14px;
+
+  color: #111827;
+
+  box-shadow: none;
 }
 
+.navbar-search input:focus {
+  box-shadow: none;
+}
+
+.navbar-search input::placeholder {
+  color: #9ca3af;
+}
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
 .navbar-links {
+  margin-left: auto;
+
   display: flex;
   align-items: center;
-  gap: 24px;
+
+  gap: 6px;
 }
 
 .navbar-links a {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 9px 11px;
+
+  border-radius: 8px;
+
+  color: #4b5563;
+
   text-decoration: none;
-  color: #374151;
+
   font-size: 14px;
-  font-weight: 500;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
 }
 
 .navbar-links a:hover {
   color: #2563eb;
+
+  background: #eff6ff;
 }
 
+
+/* =========================================
+   DASHBOARD LINK
+========================================= */
+
+.navbar-dashboard-link {
+  color: #2563eb !important;
+
+  background: #eff6ff;
+}
+
+.navbar-dashboard-link:hover {
+  background: #dbeafe !important;
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+.navbar-login {
+  margin-left: 4px;
+}
+
+
+/* =========================================
+   GET STARTED
+========================================= */
+
 .navbar-register {
+  padding: 10px 17px !important;
+
   background: #2563eb;
-  color: white !important;
-  padding: 10px 17px;
-  border-radius: 7px;
+
+  color: #ffffff !important;
+
+  border-radius: 8px !important;
+
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.18);
 }
 
 .navbar-register:hover {
-  background: #1d4ed8;
+  background: #1d4ed8 !important;
+
+  color: #ffffff !important;
 }
+
+
+/* =========================================
+   USER
+========================================= */
 
 .navbar-user {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-weight: 600;
+
+  gap: 8px;
+
+  margin-left: 5px;
+
+  padding: 6px 10px;
+
+  border-left: 1px solid #e5e7eb;
 }
+
+.navbar-user-icon {
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #dbeafe;
+
+  color: #2563eb;
+}
+
+.navbar-user-name {
+  max-width: 110px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #374151;
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
 
 .navbar-logout {
   display: flex;
   align-items: center;
+
   gap: 6px;
+
+  padding: 9px 11px;
+
   border: none;
+
+  border-radius: 8px;
+
   background: transparent;
-  cursor: pointer;
-  font-size: 15px;
-  font-family: inherit;
+
+  color: #4b5563;
+
+  font-size: 14px;
+
   font-weight: 600;
+
+  font-family: inherit;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
 }
 
-.navbar-links a {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.navbar-logout:hover {
+  color: #dc2626;
+
+  background: #fef2f2;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1050px) {
+
+  .navbar-container {
+    gap: 16px;
+  }
+
+  .navbar-search {
+    width: 220px;
+  }
+
+  .navbar-links {
+    gap: 2px;
+  }
+
+  .navbar-links a,
+  .navbar-logout {
+    padding: 8px;
+  }
+
+  .navbar-user-name {
+    display: none;
+  }
+}
+
+
+@media (max-width: 800px) {
+
+  .navbar-container {
+    min-height: 64px;
+
+    padding: 0 16px;
+
+    gap: 12px;
+  }
+
+  .navbar-search {
+    display: none;
+  }
+
+  .navbar-logo-text {
+    font-size: 19px;
+  }
+
+  .navbar-logo-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .navbar-links a,
+  .navbar-logout {
+    font-size: 13px;
+  }
+
+  .navbar-user {
+    border-left: none;
+
+    margin-left: 0;
+
+    padding: 5px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .navbar-container {
+    flex-wrap: wrap;
+
+    padding: 10px 14px;
+  }
+
+  .navbar-links {
+    width: 100%;
+
+    justify-content: center;
+
+    padding-bottom: 4px;
+
+    overflow-x: auto;
+  }
+
+  .navbar-links a,
+  .navbar-logout {
+    flex-shrink: 0;
+  }
+
+  .navbar-user {
+    flex-shrink: 0;
+  }
 }

@@ -6,17 +6,14 @@ import {
   LogOut,
   LayoutDashboard,
 } from "lucide-react";
+
 import { useAuth } from "../context/AuthContext.jsx";
 import "./Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const {
-    user,
-    isAuthenticated,
-    logout,
-  } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -29,8 +26,13 @@ const Navbar = () => {
 
         {/* Logo */}
         <Link to="/" className="navbar-logo">
-          <BriefcaseBusiness size={28} />
-          <span>HireHub</span>
+          <span className="navbar-logo-icon">
+            <BriefcaseBusiness size={21} />
+          </span>
+
+          <span className="navbar-logo-text">
+            Hire<span>Hub</span>
+          </span>
         </Link>
 
         {/* Search */}
@@ -40,6 +42,11 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search jobs..."
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                navigate(`/jobs?search=${e.target.value}`);
+              }
+            }}
           />
         </div>
 
@@ -54,7 +61,6 @@ const Navbar = () => {
             Find Jobs
           </Link>
 
-          {/* Logged-in user */}
           {isAuthenticated ? (
             <>
               {/* Job Seeker */}
@@ -66,20 +72,25 @@ const Navbar = () => {
 
               {/* Recruiter */}
               {user?.role === "recruiter" && (
-                <Link to="/recruiter/dashboard">
+                <Link
+                  to="/recruiter/dashboard"
+                  className="navbar-dashboard-link"
+                >
                   <LayoutDashboard size={17} />
                   Dashboard
                 </Link>
               )}
 
-              {/* User info */}
-              <span className="navbar-user">
-                <User size={17} />
+              {/* User */}
+              <div className="navbar-user">
+                <span className="navbar-user-icon">
+                  <User size={16} />
+                </span>
 
-                <span>
+                <span className="navbar-user-name">
                   {user?.name || "User"}
                 </span>
-              </span>
+              </div>
 
               {/* Logout */}
               <button
@@ -87,14 +98,13 @@ const Navbar = () => {
                 className="navbar-logout"
                 onClick={handleLogout}
               >
-                <LogOut size={17} />
+                <LogOut size={16} />
                 Logout
               </button>
             </>
           ) : (
             <>
-              {/* Guest */}
-              <Link to="/login">
+              <Link to="/login" className="navbar-login">
                 Login
               </Link>
 
