@@ -353,3 +353,26 @@ export const deleteJob = async (req, res) => {
     });
   }
 };
+
+export const getMyJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({
+      recruiter: req.userId,
+    })
+      .sort({ createdAt: -1 })
+      .populate("recruiter", "name email");
+
+    return res.status(200).json({
+      success: true,
+      count: jobs.length,
+      jobs,
+    });
+  } catch (error) {
+    console.error("Get my jobs error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error while fetching your jobs",
+    });
+  }
+};

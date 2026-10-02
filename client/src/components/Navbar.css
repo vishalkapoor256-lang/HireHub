@@ -78,3 +78,28 @@
 .navbar-register:hover {
   background: #1d4ed8;
 }
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.navbar-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 600;
+}
+
+.navbar-links a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
