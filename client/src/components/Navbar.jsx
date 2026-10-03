@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import {
   BriefcaseBusiness,
   Search,
   User,
   LogOut,
   LayoutDashboard,
+  Menu,
+  X,
 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext.jsx";
@@ -15,17 +19,53 @@ const Navbar = () => {
 
   const { user, isAuthenticated, logout } = useAuth();
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile menu
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
+
+  // Toggle mobile menu
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen((prev) => !prev);
+  };
+
+  // Logout
   const handleLogout = () => {
     logout();
+
+    setMobileMenuOpen(false);
+
     navigate("/");
+  };
+
+  // Search jobs
+  const handleSearch = (e) => {
+    if (e.key === "Enter") {
+      const searchValue = e.target.value.trim();
+
+      if (searchValue) {
+        navigate(`/jobs?search=${encodeURIComponent(searchValue)}`);
+
+        closeMobileMenu();
+      }
+    }
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
 
-        {/* Logo */}
-        <Link to="/" className="navbar-logo">
+        {/* =========================================
+            LOGO
+        ========================================= */}
+
+        <Link
+          to="/"
+          className="navbar-logo"
+          onClick={closeMobileMenu}
+        >
           <span className="navbar-logo-icon">
             <BriefcaseBusiness size={21} />
           </span>
@@ -35,57 +75,124 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Search */}
+
+        {/* =========================================
+            SEARCH
+        ========================================= */}
+
         <div className="navbar-search">
           <Search size={18} />
 
           <input
             type="text"
             placeholder="Search jobs..."
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                navigate(`/jobs?search=${e.target.value}`);
-              }
-            }}
+            onKeyDown={handleSearch}
           />
         </div>
 
-        {/* Navigation */}
-        <div className="navbar-links">
 
-          <Link to="/">
+        {/* =========================================
+            MOBILE MENU BUTTON
+        ========================================= */}
+
+        <button
+          type="button"
+          className="navbar-menu-button"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle navigation menu"
+          aria-expanded={mobileMenuOpen}
+        >
+          {mobileMenuOpen ? (
+            <X size={21} />
+          ) : (
+            <Menu size={21} />
+          )}
+        </button>
+
+
+        {/* =========================================
+            NAVIGATION
+        ========================================= */}
+
+        <div
+          className={`navbar-links ${
+            mobileMenuOpen ? "mobile-open" : ""
+          }`}
+        >
+
+          {/* Home */}
+
+          <Link
+            to="/"
+            onClick={closeMobileMenu}
+          >
             Home
           </Link>
 
-          <Link to="/jobs">
+
+          {/* Find Jobs */}
+
+          <Link
+            to="/jobs"
+            onClick={closeMobileMenu}
+          >
             Find Jobs
           </Link>
 
+
+          {/* =========================================
+              AUTHENTICATED USER
+          ========================================= */}
+
           {isAuthenticated ? (
             <>
-              {/* Job Seeker */}
+
+              {/* =====================================
+                  JOB SEEKER
+              ===================================== */}
+
               {user?.role === "jobseeker" && (
                 <>
-                <Link to="/dashboard">Dashboard</Link>
-                <Link to="/my-applications">
-                  My Applications
-                </Link>
+                  <Link
+                    to="/dashboard"
+                    onClick={closeMobileMenu}
+                  >
+                    Dashboard
+                  </Link>
+
+                  <Link
+                    to="/my-applications"
+                    onClick={closeMobileMenu}
+                  >
+                    My Applications
+                  </Link>
                 </>
               )}
 
-              {/* Recruiter */}
+
+              {/* =====================================
+                  RECRUITER
+              ===================================== */}
+
               {user?.role === "recruiter" && (
                 <Link
                   to="/recruiter/dashboard"
                   className="navbar-dashboard-link"
+                  onClick={closeMobileMenu}
                 >
                   <LayoutDashboard size={17} />
-                  Dashboard
+
+                  <span>Dashboard</span>
                 </Link>
               )}
 
-              {/* User */}
+
+              {/* =====================================
+                  USER
+              ===================================== */}
+
               <div className="navbar-user">
+
                 <span className="navbar-user-icon">
                   <User size={16} />
                 </span>
@@ -93,27 +200,49 @@ const Navbar = () => {
                 <span className="navbar-user-name">
                   {user?.name || "User"}
                 </span>
+
               </div>
 
-              {/* Logout */}
+
+              {/* =====================================
+                  LOGOUT
+              ===================================== */}
+
               <button
                 type="button"
                 className="navbar-logout"
                 onClick={handleLogout}
               >
                 <LogOut size={16} />
-                Logout
+
+                <span>Logout</span>
               </button>
+
             </>
           ) : (
+
+            /* =======================================
+               LOGGED OUT USER
+            ======================================= */
+
             <>
-              <Link to="/login" className="navbar-login">
+              {/* Login */}
+
+              <Link
+                to="/login"
+                className="navbar-login"
+                onClick={closeMobileMenu}
+              >
                 Login
               </Link>
+
+
+              {/* Get Started */}
 
               <Link
                 to="/register"
                 className="navbar-register"
+                onClick={closeMobileMenu}
               >
                 Get Started
               </Link>

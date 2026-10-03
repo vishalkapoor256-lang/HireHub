@@ -1,5 +1,18 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  BriefcaseBusiness,
+  Plus,
+  Users,
+  CheckCircle2,
+  Clock3,
+  ArrowRight,
+  MapPin,
+  CalendarDays,
+  Building2,
+  Eye,
+} from "lucide-react";
+
 import api from "../../services/api.js";
 
 const RecruiterDashboard = () => {
@@ -23,7 +36,10 @@ const RecruiterDashboard = () => {
 
         setJobs(response.data.jobs || []);
       } catch (error) {
-        console.error("Failed to fetch recruiter jobs:", error);
+        console.error(
+          "Failed to fetch recruiter jobs:",
+          error
+        );
 
         setError(
           error.response?.data?.message ||
@@ -43,127 +59,305 @@ const RecruiterDashboard = () => {
     (job) => job.status === "published"
   ).length;
 
+  const draftJobs = jobs.filter(
+    (job) => job.status === "draft"
+  ).length;
+
+  const closedJobs = jobs.filter(
+    (job) => job.status === "closed"
+  ).length;
+
+  const formatText = (value) => {
+    if (!value) return "N/A";
+
+    return value
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  };
+
+  const formatDate = (date) => {
+    if (!date) return "N/A";
+
+    return new Date(date).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
   if (loading) {
     return (
-      <main className="recruiter-dashboard">
-        <h1>Recruiter Dashboard</h1>
-        <p>Loading your jobs...</p>
-      </main>
-    );
-  }
-
-  if (error) {
-    return (
-      <main className="recruiter-dashboard">
-        <h1>Recruiter Dashboard</h1>
-        <p>{error}</p>
+      <main className="recruiter-dashboard-page">
+        <div className="recruiter-dashboard-container">
+          <div className="recruiter-dashboard-loading">
+            <div className="dashboard-loading-spinner"></div>
+            <p>Loading your recruiter dashboard...</p>
+          </div>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="recruiter-dashboard">
-      <h1>Recruiter Dashboard</h1>
+    <main className="recruiter-dashboard-page">
 
-      <p>
-        Manage your jobs and applications from one place.
-      </p>
+      <div className="recruiter-dashboard-container">
 
-      <section className="dashboard-stats">
-        <div>
-          <h2>{totalJobs}</h2>
-          <p>Total Jobs</p>
-        </div>
+        {/* Header */}
 
-        <div>
-          <h2>0</h2>
-          <p>Total Applications</p>
-        </div>
+        <section className="recruiter-dashboard-header">
 
-        <div>
-          <h2>{activeJobs}</h2>
-          <p>Active Jobs</p>
-        </div>
-      </section>
-
-      <section className="my-jobs-section">
-  <div className="section-header">
-    <div>
-      <h2>My Jobs</h2>
-      <p>Manage the jobs you have posted.</p>
-    </div>
-
-    <Link
-      to="/recruiter/jobs/create"
-      className="create-job-button"
-    >
-      + Create Job
-    </Link>
-  </div>
-
-        {jobs.length === 0 ? (
           <div>
-            <p>You haven't posted any jobs yet.</p>
+            <span className="recruiter-dashboard-eyebrow">
+              Recruiter Dashboard
+            </span>
 
-            <Link to="/recruiter/jobs/create">
-              Create Your First Job
-            </Link>
+            <h1>
+              Manage your hiring.
+            </h1>
+
+            <p>
+              Create jobs, manage applicants, and find the right
+              talent for your team.
+            </p>
           </div>
-        ) : (
-          <div className="recruiter-jobs-list">
-            {jobs.map((job) => (
-              <div
-                className="recruiter-job-card"
-                key={job._id}
-              >
-                <h3>{job.title}</h3>
 
-                <p>
-                  <strong>Company:</strong>{" "}
-                  {job.companyName}
-                </p>
+          <Link
+            to="/recruiter/jobs/create"
+            className="recruiter-create-button"
+          >
+            <Plus size={18} />
+            Create Job
+          </Link>
 
-                <p>
-                  <strong>Location:</strong>{" "}
-                  {job.location}
-                </p>
+        </section>
 
-                <p>
-                  <strong>Type:</strong>{" "}
-                  {job.employmentType}
-                </p>
+        {/* Error */}
 
-                <p>
-                  <strong>Workplace:</strong>{" "}
-                  {job.workplaceType}
-                </p>
-
-                <p>
-                  <strong>Status:</strong>{" "}
-                  {job.status}
-                </p>
-
-                <p>
-                  <strong>Posted:</strong>{" "}
-                  {new Date(
-                    job.createdAt
-                  ).toLocaleDateString()}
-                </p>
-
-                <div className="recruiter-job-actions">
-  <Link to={`/jobs/${job._id}`}>
-    View Job
-  </Link>
-
-  <Link to={`/recruiter/jobs/${job._id}/applicants`}>
-    View Applicants
-  </Link>
-</div>
-              </div>
-            ))}
+        {error && (
+          <div className="recruiter-dashboard-error">
+            {error}
           </div>
         )}
-      </section>
+
+        {/* Statistics */}
+
+        <section className="recruiter-dashboard-stats">
+
+          <div className="recruiter-stat-card">
+
+            <div className="recruiter-stat-icon blue">
+              <BriefcaseBusiness size={21} />
+            </div>
+
+            <div>
+              <span>Total Jobs</span>
+              <strong>{totalJobs}</strong>
+            </div>
+
+          </div>
+
+          <div className="recruiter-stat-card">
+
+            <div className="recruiter-stat-icon green">
+              <CheckCircle2 size={21} />
+            </div>
+
+            <div>
+              <span>Active Jobs</span>
+              <strong>{activeJobs}</strong>
+            </div>
+
+          </div>
+
+          <div className="recruiter-stat-card">
+
+            <div className="recruiter-stat-icon orange">
+              <Clock3 size={21} />
+            </div>
+
+            <div>
+              <span>Draft Jobs</span>
+              <strong>{draftJobs}</strong>
+            </div>
+
+          </div>
+
+          <div className="recruiter-stat-card">
+
+            <div className="recruiter-stat-icon purple">
+              <Users size={21} />
+            </div>
+
+            <div>
+              <span>Closed Jobs</span>
+              <strong>{closedJobs}</strong>
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* Main Content */}
+
+        <section className="recruiter-jobs-section">
+
+          <div className="recruiter-section-header">
+
+            <div>
+              <h2>My Jobs</h2>
+
+              <p>
+                Manage the jobs you have posted on HireHub.
+              </p>
+            </div>
+
+            <Link
+              to="/recruiter/jobs/create"
+              className="recruiter-section-create"
+            >
+              <Plus size={16} />
+              Create Job
+            </Link>
+
+          </div>
+
+          {jobs.length === 0 ? (
+
+            <div className="recruiter-empty-state">
+
+              <div className="recruiter-empty-icon">
+                <BriefcaseBusiness size={26} />
+              </div>
+
+              <h3>You haven't posted any jobs yet</h3>
+
+              <p>
+                Create your first job posting and start finding
+                qualified candidates.
+              </p>
+
+              <Link
+                to="/recruiter/jobs/create"
+                className="recruiter-empty-button"
+              >
+                Create Your First Job
+                <ArrowRight size={16} />
+              </Link>
+
+            </div>
+
+          ) : (
+
+            <div className="recruiter-jobs-grid">
+
+              {jobs.map((job) => (
+
+                <article
+                  className="recruiter-job-card"
+                  key={job._id}
+                >
+
+                  {/* Card Header */}
+
+                  <div className="recruiter-job-card-header">
+
+                    <div className="recruiter-company-logo">
+                      {job.companyName
+                        ?.charAt(0)
+                        ?.toUpperCase() || (
+                        <Building2 size={20} />
+                      )}
+                    </div>
+
+                    <span
+                      className={`recruiter-job-status status-${job.status}`}
+                    >
+                      {formatText(job.status)}
+                    </span>
+
+                  </div>
+
+                  {/* Job Information */}
+
+                  <div className="recruiter-job-content">
+
+                    <h3>
+                      {job.title}
+                    </h3>
+
+                    <p className="recruiter-company-name">
+                      {job.companyName}
+                    </p>
+
+                    <div className="recruiter-job-meta">
+
+                      <span>
+                        <MapPin size={14} />
+                        {job.location}
+                      </span>
+
+                      <span>
+                        <BriefcaseBusiness size={14} />
+                        {formatText(
+                          job.employmentType
+                        )}
+                      </span>
+
+                      <span>
+                        <Building2 size={14} />
+                        {formatText(
+                          job.workplaceType
+                        )}
+                      </span>
+
+                    </div>
+
+                    <div className="recruiter-job-posted">
+
+                      <CalendarDays size={14} />
+
+                      Posted{" "}
+                      {formatDate(job.createdAt)}
+
+                    </div>
+
+                  </div>
+
+                  {/* Actions */}
+
+                  <div className="recruiter-job-actions">
+
+                    <Link
+                      to={`/jobs/${job._id}`}
+                      className="recruiter-view-job"
+                    >
+                      <Eye size={15} />
+                      View Job
+                    </Link>
+
+                    <Link
+                      to={`/recruiter/jobs/${job._id}/applicants`}
+                      className="recruiter-view-applicants"
+                    >
+                      <Users size={15} />
+                      Applicants
+                    </Link>
+
+                  </div>
+
+                </article>
+
+              ))}
+
+            </div>
+
+          )}
+
+        </section>
+
+      </div>
+
     </main>
   );
 };

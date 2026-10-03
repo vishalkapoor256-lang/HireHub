@@ -312,6 +312,8 @@
 
   font-family: inherit;
 
+  cursor: pointer;
+
   transition:
     color 0.2s ease,
     background 0.2s ease;
@@ -325,7 +327,47 @@
 
 
 /* =========================================
-   RESPONSIVE
+   MOBILE MENU BUTTON
+========================================= */
+
+.navbar-menu-button {
+  display: none;
+
+  width: 40px;
+  height: 40px;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-left: auto;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.navbar-menu-button:hover {
+  background: #eff6ff;
+
+  border-color: #bfdbfe;
+
+  color: #2563eb;
+}
+
+
+/* =========================================
+   RESPONSIVE — TABLET
 ========================================= */
 
 @media (max-width: 1050px) {
@@ -353,6 +395,10 @@
 }
 
 
+/* =========================================
+   RESPONSIVE — SMALL TABLET
+========================================= */
+
 @media (max-width: 800px) {
 
   .navbar-container {
@@ -376,45 +422,113 @@
     height: 34px;
   }
 
-  .navbar-links a,
-  .navbar-logout {
-    font-size: 13px;
+  /*
+    Hide desktop navigation.
+    Mobile menu will be controlled
+    by Navbar.jsx.
+  */
+  .navbar-links {
+    display: none;
   }
 
-  .navbar-user {
-    border-left: none;
-
-    margin-left: 0;
-
-    padding: 5px;
+  .navbar-menu-button {
+    display: flex;
   }
 }
 
 
-@media (max-width: 600px) {
+/* =========================================
+   RESPONSIVE — MOBILE MENU
+========================================= */
+
+@media (max-width: 800px) {
 
   .navbar-container {
-    flex-wrap: wrap;
+    position: relative;
 
-    padding: 10px 14px;
+    flex-wrap: wrap;
   }
 
-  .navbar-links {
+  .navbar-links.mobile-open {
     width: 100%;
 
-    justify-content: center;
+    margin-left: 0;
 
-    padding-bottom: 4px;
+    padding: 12px 0 4px;
 
-    overflow-x: auto;
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 4px;
+
+    border-top: 1px solid #f1f5f9;
   }
 
-  .navbar-links a,
-  .navbar-logout {
-    flex-shrink: 0;
+  .navbar-links.mobile-open a,
+  .navbar-links.mobile-open .navbar-logout {
+    width: 100%;
+
+    justify-content: flex-start;
+
+    padding: 11px 12px;
+
+    font-size: 14px;
   }
 
-  .navbar-user {
-    flex-shrink: 0;
+  .navbar-links.mobile-open .navbar-user {
+    width: 100%;
+
+    margin: 4px 0 0;
+
+    padding: 10px 12px;
+
+    border-left: none;
+
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .navbar-links.mobile-open .navbar-user-name {
+    display: block;
+
+    max-width: none;
+  }
+
+  .navbar-links.mobile-open .navbar-register {
+    justify-content: center !important;
+
+    text-align: center;
+  }
+
+  .navbar-links.mobile-open .navbar-dashboard-link {
+    justify-content: flex-start;
+  }
+}
+
+
+/* =========================================
+   EXTRA SMALL DEVICES
+========================================= */
+
+@media (max-width: 380px) {
+
+  .navbar-container {
+    padding: 0 12px;
+  }
+
+  .navbar-logo-text {
+    font-size: 18px;
+  }
+
+  .navbar-logo-icon {
+    width: 33px;
+    height: 33px;
+  }
+
+  .navbar-menu-button {
+    width: 38px;
+    height: 38px;
   }
 }

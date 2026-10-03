@@ -1,5 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  ArrowLeft,
+  BriefcaseBusiness,
+  Building2,
+  CalendarDays,
+  CheckCircle2,
+  FileText,
+  MapPin,
+  Users,
+  Wallet,
+  X,
+} from "lucide-react";
+
 import api from "../../services/api.js";
 
 const RecruiterCreateJob = () => {
@@ -28,7 +41,6 @@ const RecruiterCreateJob = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -38,7 +50,6 @@ const RecruiterCreateJob = () => {
     }));
   };
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -121,349 +132,559 @@ const RecruiterCreateJob = () => {
   return (
     <main className="create-job-page">
       <div className="create-job-container">
-        <h1>Create New Job</h1>
 
-        <p>
-          Add a new job opportunity to HireHub.
-        </p>
+        {/* PAGE HEADER */}
+
+        <div className="create-job-header">
+
+          <button
+            type="button"
+            className="create-job-back"
+            onClick={() => navigate("/recruiter/dashboard")}
+          >
+            <ArrowLeft size={17} />
+            Back to Dashboard
+          </button>
+
+          <div className="create-job-title-row">
+
+            <div className="create-job-title-icon">
+              <BriefcaseBusiness size={25} />
+            </div>
+
+            <div>
+              <span className="create-job-eyebrow">
+                Recruiter
+              </span>
+
+              <h1>Create a New Job</h1>
+
+              <p>
+                Add a job opportunity and start finding
+                qualified candidates.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* ERROR */}
 
         {error && (
-          <p className="form-error">
-            {error}
-          </p>
+          <div className="create-job-error">
+            <X size={18} />
+            <span>{error}</span>
+          </div>
         )}
 
-        <form onSubmit={handleSubmit}>
+        {/* FORM */}
+
+        <form
+          className="create-job-form"
+          onSubmit={handleSubmit}
+        >
+
           {/* BASIC INFORMATION */}
 
-          <section>
-            <h2>Basic Information</h2>
+          <section className="create-job-section">
 
-            <label htmlFor="title">
-              Job Title
-            </label>
+            <div className="create-job-section-header">
 
-            <input
-              id="title"
-              type="text"
-              name="title"
-              placeholder="e.g. Frontend Developer"
-              value={formData.title}
-              onChange={handleChange}
-              required
-            />
+              <div className="create-job-section-icon">
+                <Building2 size={19} />
+              </div>
 
-            <label htmlFor="companyName">
-              Company Name
-            </label>
+              <div>
+                <h2>Basic Information</h2>
+                <p>
+                  Provide the main information about the
+                  position.
+                </p>
+              </div>
 
-            <input
-              id="companyName"
-              type="text"
-              name="companyName"
-              placeholder="e.g. HireHub Technologies"
-              value={formData.companyName}
-              onChange={handleChange}
-              required
-            />
+            </div>
 
-            <label htmlFor="location">
-              Location
-            </label>
+            <div className="create-job-fields">
 
-            <input
-              id="location"
-              type="text"
-              name="location"
-              placeholder="e.g. Shimla, Himachal Pradesh"
-              value={formData.location}
-              onChange={handleChange}
-              required
-            />
+              <div className="create-job-field full-width">
 
-            <label htmlFor="employmentType">
-              Employment Type
-            </label>
+                <label htmlFor="title">
+                  Job Title <span>*</span>
+                </label>
 
-            <select
-              id="employmentType"
-              name="employmentType"
-              value={formData.employmentType}
-              onChange={handleChange}
-              required
-            >
-              <option value="">
-                Select employment type
-              </option>
+                <input
+                  id="title"
+                  type="text"
+                  name="title"
+                  placeholder="e.g. Frontend Developer"
+                  value={formData.title}
+                  onChange={handleChange}
+                  required
+                />
 
-              <option value="full-time">
-                Full Time
-              </option>
+              </div>
 
-              <option value="part-time">
-                Part Time
-              </option>
+              <div className="create-job-field">
 
-              <option value="contract">
-                Contract
-              </option>
+                <label htmlFor="companyName">
+                  Company Name <span>*</span>
+                </label>
 
-              <option value="internship">
-                Internship
-              </option>
+                <input
+                  id="companyName"
+                  type="text"
+                  name="companyName"
+                  placeholder="e.g. HireHub Technologies"
+                  value={formData.companyName}
+                  onChange={handleChange}
+                  required
+                />
 
-              <option value="freelance">
-                Freelance
-              </option>
-            </select>
+              </div>
 
-            <label htmlFor="workplaceType">
-              Workplace Type
-            </label>
+              <div className="create-job-field">
 
-            <select
-              id="workplaceType"
-              name="workplaceType"
-              value={formData.workplaceType}
-              onChange={handleChange}
-              required
-            >
-              <option value="">
-                Select workplace type
-              </option>
+                <label htmlFor="location">
+                  Location <span>*</span>
+                </label>
 
-              <option value="onsite">
-                Onsite
-              </option>
+                <div className="create-job-input-icon">
+                  <MapPin size={17} />
 
-              <option value="remote">
-                Remote
-              </option>
+                  <input
+                    id="location"
+                    type="text"
+                    name="location"
+                    placeholder="e.g. Shimla, Himachal Pradesh"
+                    value={formData.location}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
 
-              <option value="hybrid">
-                Hybrid
-              </option>
-            </select>
+              </div>
 
-            <label htmlFor="category">
-              Category
-            </label>
+              <div className="create-job-field">
 
-            <input
-              id="category"
-              type="text"
-              name="category"
-              placeholder="e.g. Web Development"
-              value={formData.category}
-              onChange={handleChange}
-              required
-            />
+                <label htmlFor="employmentType">
+                  Employment Type <span>*</span>
+                </label>
 
-            <label htmlFor="experienceLevel">
-              Experience Level
-            </label>
+                <select
+                  id="employmentType"
+                  name="employmentType"
+                  value={formData.employmentType}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">
+                    Select employment type
+                  </option>
+                  <option value="full-time">
+                    Full Time
+                  </option>
+                  <option value="part-time">
+                    Part Time
+                  </option>
+                  <option value="contract">
+                    Contract
+                  </option>
+                  <option value="internship">
+                    Internship
+                  </option>
+                  <option value="freelance">
+                    Freelance
+                  </option>
+                </select>
 
-            <select
-              id="experienceLevel"
-              name="experienceLevel"
-              value={formData.experienceLevel}
-              onChange={handleChange}
-              required
-            >
-              <option value="">
-                Select experience level
-              </option>
+              </div>
 
-              <option value="entry">
-                Entry Level
-              </option>
+              <div className="create-job-field">
 
-              <option value="mid">
-                Mid Level
-              </option>
+                <label htmlFor="workplaceType">
+                  Workplace Type <span>*</span>
+                </label>
 
-              <option value="senior">
-                Senior Level
-              </option>
+                <select
+                  id="workplaceType"
+                  name="workplaceType"
+                  value={formData.workplaceType}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">
+                    Select workplace type
+                  </option>
+                  <option value="onsite">
+                    Onsite
+                  </option>
+                  <option value="remote">
+                    Remote
+                  </option>
+                  <option value="hybrid">
+                    Hybrid
+                  </option>
+                </select>
 
-              <option value="lead">
-                Lead
-              </option>
-            </select>
+              </div>
+
+              <div className="create-job-field">
+
+                <label htmlFor="category">
+                  Category <span>*</span>
+                </label>
+
+                <input
+                  id="category"
+                  type="text"
+                  name="category"
+                  placeholder="e.g. Web Development"
+                  value={formData.category}
+                  onChange={handleChange}
+                  required
+                />
+
+              </div>
+
+              <div className="create-job-field">
+
+                <label htmlFor="experienceLevel">
+                  Experience Level <span>*</span>
+                </label>
+
+                <select
+                  id="experienceLevel"
+                  name="experienceLevel"
+                  value={formData.experienceLevel}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">
+                    Select experience level
+                  </option>
+                  <option value="entry">
+                    Entry Level
+                  </option>
+                  <option value="mid">
+                    Mid Level
+                  </option>
+                  <option value="senior">
+                    Senior Level
+                  </option>
+                  <option value="lead">
+                    Lead
+                  </option>
+                </select>
+
+              </div>
+
+            </div>
+
           </section>
 
           {/* SALARY */}
 
-          <section>
-            <h2>Salary</h2>
+          <section className="create-job-section">
 
-            <label htmlFor="salaryMin">
-              Minimum Salary
-            </label>
+            <div className="create-job-section-header">
 
-            <input
-              id="salaryMin"
-              type="number"
-              name="salaryMin"
-              placeholder="300000"
-              min="0"
-              value={formData.salaryMin}
-              onChange={handleChange}
-            />
+              <div className="create-job-section-icon">
+                <Wallet size={19} />
+              </div>
 
-            <label htmlFor="salaryMax">
-              Maximum Salary
-            </label>
+              <div>
+                <h2>Salary & Compensation</h2>
+                <p>
+                  Add the expected salary range for this position.
+                </p>
+              </div>
 
-            <input
-              id="salaryMax"
-              type="number"
-              name="salaryMax"
-              placeholder="600000"
-              min="0"
-              value={formData.salaryMax}
-              onChange={handleChange}
-            />
+            </div>
 
-            <label htmlFor="salaryCurrency">
-              Currency
-            </label>
+            <div className="create-job-fields salary-fields">
 
-            <input
-              id="salaryCurrency"
-              type="text"
-              name="salaryCurrency"
-              value={formData.salaryCurrency}
-              onChange={handleChange}
-              readOnly
-            />
+              <div className="create-job-field">
+
+                <label htmlFor="salaryMin">
+                  Minimum Salary
+                </label>
+
+                <div className="salary-input-wrapper">
+
+                  <span>₹</span>
+
+                  <input
+                    id="salaryMin"
+                    type="number"
+                    name="salaryMin"
+                    placeholder="300000"
+                    min="0"
+                    value={formData.salaryMin}
+                    onChange={handleChange}
+                  />
+
+                </div>
+
+              </div>
+
+              <div className="create-job-field">
+
+                <label htmlFor="salaryMax">
+                  Maximum Salary
+                </label>
+
+                <div className="salary-input-wrapper">
+
+                  <span>₹</span>
+
+                  <input
+                    id="salaryMax"
+                    type="number"
+                    name="salaryMax"
+                    placeholder="600000"
+                    min="0"
+                    value={formData.salaryMax}
+                    onChange={handleChange}
+                  />
+
+                </div>
+
+              </div>
+
+              <div className="create-job-field">
+
+                <label htmlFor="salaryCurrency">
+                  Currency
+                </label>
+
+                <input
+                  id="salaryCurrency"
+                  type="text"
+                  name="salaryCurrency"
+                  value={formData.salaryCurrency}
+                  readOnly
+                />
+
+              </div>
+
+            </div>
+
           </section>
 
-          {/* JOB DETAILS */}
+          {/* JOB DESCRIPTION */}
 
-          <section>
-            <h2>Job Details</h2>
+          <section className="create-job-section">
 
-            <label htmlFor="description">
-              Description
-            </label>
+            <div className="create-job-section-header">
 
-            <textarea
-              id="description"
-              name="description"
-              rows="6"
-              placeholder="Describe the job..."
-              value={formData.description}
-              onChange={handleChange}
-              required
-            />
+              <div className="create-job-section-icon">
+                <FileText size={19} />
+              </div>
 
-            <label htmlFor="requirements">
-              Requirements
-            </label>
+              <div>
+                <h2>Job Details</h2>
+                <p>
+                  Describe the role, requirements and
+                  responsibilities.
+                </p>
+              </div>
 
-            <textarea
-              id="requirements"
-              name="requirements"
-              rows="6"
-              placeholder={
-                "Enter one requirement per line...\n" +
-                "Basic knowledge of React\n" +
-                "Understanding of JavaScript\n" +
-                "Git and GitHub knowledge"
-              }
-              value={formData.requirements}
-              onChange={handleChange}
-            />
+            </div>
 
-            <label htmlFor="responsibilities">
-              Responsibilities
-            </label>
+            <div className="create-job-fields">
 
-            <textarea
-              id="responsibilities"
-              name="responsibilities"
-              rows="6"
-              placeholder={
-                "Enter one responsibility per line...\n" +
-                "Build React components\n" +
-                "Work with backend APIs\n" +
-                "Fix UI bugs"
-              }
-              value={formData.responsibilities}
-              onChange={handleChange}
-            />
+              <div className="create-job-field full-width">
 
-            <label htmlFor="skills">
-              Skills
-            </label>
+                <label htmlFor="description">
+                  Job Description <span>*</span>
+                </label>
 
-            <input
-              id="skills"
-              type="text"
-              name="skills"
-              placeholder="JavaScript, React.js, Node.js"
-              value={formData.skills}
-              onChange={handleChange}
-            />
+                <textarea
+                  id="description"
+                  name="description"
+                  rows="7"
+                  placeholder="Describe the role, team, goals and what the candidate will be working on..."
+                  value={formData.description}
+                  onChange={handleChange}
+                  required
+                />
+
+              </div>
+
+              <div className="create-job-field">
+
+                <label htmlFor="requirements">
+                  Requirements
+                </label>
+
+                <textarea
+                  id="requirements"
+                  name="requirements"
+                  rows="7"
+                  placeholder={
+                    "Enter one requirement per line...\n\nBasic knowledge of React\nUnderstanding of JavaScript\nGit and GitHub knowledge"
+                  }
+                  value={formData.requirements}
+                  onChange={handleChange}
+                />
+
+                <small>
+                  Enter each requirement on a new line.
+                </small>
+
+              </div>
+
+              <div className="create-job-field">
+
+                <label htmlFor="responsibilities">
+                  Responsibilities
+                </label>
+
+                <textarea
+                  id="responsibilities"
+                  name="responsibilities"
+                  rows="7"
+                  placeholder={
+                    "Enter one responsibility per line...\n\nBuild React components\nWork with backend APIs\nFix UI bugs"
+                  }
+                  value={formData.responsibilities}
+                  onChange={handleChange}
+                />
+
+                <small>
+                  Enter each responsibility on a new line.
+                </small>
+
+              </div>
+
+              <div className="create-job-field full-width">
+
+                <label htmlFor="skills">
+                  Required Skills
+                </label>
+
+                <input
+                  id="skills"
+                  type="text"
+                  name="skills"
+                  placeholder="JavaScript, React.js, Node.js, MongoDB"
+                  value={formData.skills}
+                  onChange={handleChange}
+                />
+
+                <small>
+                  Separate skills with commas.
+                </small>
+
+              </div>
+
+            </div>
+
           </section>
 
           {/* APPLICATION SETTINGS */}
 
-          <section>
-            <h2>Application Settings</h2>
+          <section className="create-job-section">
 
-            <label htmlFor="applicationDeadline">
-              Application Deadline
-            </label>
+            <div className="create-job-section-header">
 
-            <input
-              id="applicationDeadline"
-              type="date"
-              name="applicationDeadline"
-              value={formData.applicationDeadline}
-              onChange={handleChange}
-            />
+              <div className="create-job-section-icon">
+                <CalendarDays size={19} />
+              </div>
 
-            <label htmlFor="openings">
-              Number of Openings
-            </label>
+              <div>
+                <h2>Application Settings</h2>
+                <p>
+                  Configure how candidates can apply for
+                  this position.
+                </p>
+              </div>
 
-            <input
-              id="openings"
-              type="number"
-              name="openings"
-              min="1"
-              value={formData.openings}
-              onChange={handleChange}
-              required
-            />
+            </div>
 
-            <label htmlFor="status">
-              Job Status
-            </label>
+            <div className="create-job-fields">
 
-            <select
-              id="status"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-            >
-              <option value="draft">
-                Draft
-              </option>
+              <div className="create-job-field">
 
-              <option value="published">
-                Published
-              </option>
-            </select>
+                <label htmlFor="applicationDeadline">
+                  Application Deadline
+                </label>
+
+                <div className="create-job-input-icon">
+
+                  <CalendarDays size={17} />
+
+                  <input
+                    id="applicationDeadline"
+                    type="date"
+                    name="applicationDeadline"
+                    value={formData.applicationDeadline}
+                    onChange={handleChange}
+                  />
+
+                </div>
+
+              </div>
+
+              <div className="create-job-field">
+
+                <label htmlFor="openings">
+                  Number of Openings <span>*</span>
+                </label>
+
+                <div className="create-job-input-icon">
+
+                  <Users size={17} />
+
+                  <input
+                    id="openings"
+                    type="number"
+                    name="openings"
+                    min="1"
+                    value={formData.openings}
+                    onChange={handleChange}
+                    required
+                  />
+
+                </div>
+
+              </div>
+
+              <div className="create-job-field">
+
+                <label htmlFor="status">
+                  Job Status
+                </label>
+
+                <select
+                  id="status"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                >
+                  <option value="published">
+                    Published
+                  </option>
+
+                  <option value="draft">
+                    Draft
+                  </option>
+                </select>
+
+              </div>
+
+            </div>
+
           </section>
 
-          {/* BUTTONS */}
+          {/* FORM ACTIONS */}
 
           <div className="create-job-actions">
+
             <button
               type="button"
+              className="create-job-cancel"
               onClick={() =>
                 navigate("/recruiter/dashboard")
               }
@@ -474,14 +695,26 @@ const RecruiterCreateJob = () => {
 
             <button
               type="submit"
+              className="create-job-submit"
               disabled={loading}
             >
-              {loading
-                ? "Creating Job..."
-                : "Create Job"}
+              {loading ? (
+                <>
+                  <span className="create-job-spinner"></span>
+                  Creating Job...
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 size={18} />
+                  Create Job
+                </>
+              )}
             </button>
+
           </div>
+
         </form>
+
       </div>
     </main>
   );
