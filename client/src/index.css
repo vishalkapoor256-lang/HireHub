@@ -538,97 +538,551 @@ textarea {
 }
 
 
+
 /* =========================================
-   MY APPLICATIONS
+   MY APPLICATIONS PAGE
 ========================================= */
 
 .my-applications-page {
-  max-width: 1100px;
+  min-height: 100vh;
+  background: var(--background-soft);
+  padding: 50px 20px 80px;
+}
 
+.my-applications-container {
+  width: min(1200px, 100%);
   margin: 0 auto;
-
-  padding: 40px 20px;
 }
 
-.applications-list {
+/* Header */
+
+.my-applications-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 32px;
+}
+
+.my-applications-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.my-applications-header h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 36px;
+  line-height: 1.2;
+}
+
+.my-applications-header p {
+  margin: 10px 0 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.browse-jobs-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 17px;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+.browse-jobs-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+/* Statistics */
+
+.my-applications-stats {
   display: grid;
-
-  gap: 20px;
-
-  margin-top: 30px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
 }
 
-.application-card {
-  padding: 24px;
-
+.my-application-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 18px;
   border: 1px solid var(--border);
-
   border-radius: var(--radius-lg);
-
-  background: #ffffff;
-
+  background: var(--background);
   box-shadow: var(--shadow-sm);
 }
 
-.application-card h2 {
-  margin-bottom: 15px;
+.my-application-stat-card span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--text-secondary);
+  font-size: 12px;
 }
 
-.application-card p {
-  margin: 8px 0;
+.my-application-stat-card strong {
+  color: var(--text-primary);
+  font-size: 22px;
 }
 
-.status-badge {
-  display: inline-block;
-
-  padding: 5px 10px;
-
-  border-radius: 20px;
-
-  font-size: 13px;
-
-  font-weight: 600;
-
-  text-transform: capitalize;
+.my-application-stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 10px;
 }
 
-.status-applied {
-  background: #e0f2fe;
-  color: #0369a1;
+.my-application-stat-icon.blue {
+  background: #dbeafe;
+  color: #2563eb;
 }
 
-.status-shortlisted {
+.my-application-stat-icon.orange {
+  background: #ffedd5;
+  color: #ea580c;
+}
+
+.my-application-stat-icon.purple {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.my-application-stat-icon.green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.my-application-stat-icon.success {
+  background: #d1fae5;
+  color: #059669;
+}
+
+/* Toolbar */
+
+.my-applications-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.my-applications-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.my-applications-search svg {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+}
+
+.my-applications-search input {
+  width: 100%;
+  height: 44px;
+  padding: 0 15px 0 42px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.my-applications-search input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.my-applications-filter {
+  height: 44px;
+  min-width: 170px;
+  padding: 0 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+.my-applications-filter:focus {
+  border-color: var(--primary);
+}
+
+/* Applications List */
+
+.my-applications-list {
+  display: grid;
+  gap: 18px;
+}
+
+.my-application-card {
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--background);
+  box-shadow: var(--shadow-sm);
+  transition: 0.2s ease;
+}
+
+.my-application-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Card Header */
+
+.my-application-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.my-application-job-info {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.my-application-company-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.my-application-job-info h2 {
+  margin: 0 0 4px;
+  color: var(--text-primary);
+  font-size: 18px;
+}
+
+.my-application-job-info p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.my-application-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.my-application-status.status-applied {
   background: #fef3c7;
   color: #92400e;
 }
 
-.status-interview {
+.my-application-status.status-shortlisted {
   background: #ede9fe;
   color: #6d28d9;
 }
 
-.status-hired {
+.my-application-status.status-interview {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.my-application-status.status-hired {
   background: #dcfce7;
   color: #166534;
 }
 
-.status-rejected {
+.my-application-status.status-rejected {
   background: #fee2e2;
-  color: #991b1b;
+  color: #b91c1c;
 }
 
-.application-card a {
-  display: inline-block;
+/* Metadata */
 
-  margin-top: 10px;
+.my-application-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
 
+.my-application-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.my-application-meta svg {
+  color: var(--text-muted);
+}
+
+/* Resume */
+
+.my-application-resume {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 16px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--background-muted);
+}
+
+.my-application-resume > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.my-application-resume svg {
   color: var(--primary);
+}
 
+.my-application-resume a {
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 600;
   text-decoration: none;
+}
 
+.my-application-resume a:hover {
+  text-decoration: underline;
+}
+
+/* Actions */
+
+.my-application-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 17px;
+}
+
+.my-application-view-job {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  background: var(--background);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.my-application-view-job:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+/* Empty State */
+
+.my-applications-empty {
+  padding: 70px 25px;
+  border: 1px dashed var(--border-dark);
+  border-radius: var(--radius-lg);
+  background: var(--background);
+  text-align: center;
+}
+
+.my-applications-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 16px;
+  border-radius: 14px;
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.my-applications-empty h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 21px;
+}
+
+.my-applications-empty p {
+  max-width: 520px;
+  margin: 9px auto 22px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.my-applications-empty-button {
+  display: inline-flex;
+  padding: 10px 17px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
   font-weight: 600;
 }
 
+/* Loading */
+
+.my-applications-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: var(--text-secondary);
+}
+
+.my-applications-spinner {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 14px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: myApplicationsSpin 0.8s linear infinite;
+}
+
+@keyframes myApplicationsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error */
+
+.my-applications-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.my-applications-error h2 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.my-applications-error p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+  .my-applications-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .my-applications-page {
+    padding: 35px 15px 60px;
+  }
+
+  .my-applications-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .my-applications-header h1 {
+    font-size: 30px;
+  }
+
+  .my-applications-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .my-applications-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .my-applications-filter {
+    width: 100%;
+  }
+
+  .my-application-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .my-application-resume {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .my-application-actions {
+    justify-content: stretch;
+  }
+
+  .my-application-view-job {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 450px) {
+  .my-applications-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .my-applications-header h1 {
+    font-size: 27px;
+  }
+
+  .my-application-card {
+    padding: 17px;
+  }
+}
 
 /* =========================================
    RECRUITER DASHBOARD
