@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
 import api from "../services/api.js";
 
 const AuthContext = createContext(null);
@@ -7,9 +13,13 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Get current logged-in user
+  // ==========================================
+  // GET CURRENT LOGGED-IN USER
+  // ==========================================
+
   const fetchCurrentUser = async () => {
-    const token = localStorage.getItem("hirehub_token");
+    const token =
+      localStorage.getItem("hirehub_token");
 
     if (!token) {
       setLoading(false);
@@ -17,17 +27,25 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await api.get("/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.get(
+        "/auth/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setUser(response.data.user);
     } catch (error) {
-      console.error("Failed to fetch current user");
+      console.error(
+        "Failed to fetch current user"
+      );
 
-      localStorage.removeItem("hirehub_token");
+      localStorage.removeItem(
+        "hirehub_token"
+      );
+
       setUser(null);
     } finally {
       setLoading(false);
@@ -38,44 +56,86 @@ export const AuthProvider = ({ children }) => {
     fetchCurrentUser();
   }, []);
 
-  // Login
-  const login = async (email, password) => {
-    const response = await api.post("/auth/login", {
-      email,
-      password,
-    });
+  // ==========================================
+  // LOGIN
+  // ==========================================
 
-    const { token, user } = response.data;
+  const login = async (
+    email,
+    password
+  ) => {
+    const response = await api.post(
+      "/auth/login",
+      {
+        email,
+        password,
+      }
+    );
 
-    localStorage.setItem("hirehub_token", token);
+    const { token, user } =
+      response.data;
+
+    localStorage.setItem(
+      "hirehub_token",
+      token
+    );
+
     setUser(user);
 
     return response.data;
   };
 
-  // Register
-const register = async (name, email, password, role) => {
-  const response = await api.post("/auth/register", {
+  // ==========================================
+  // REGISTER
+  // ==========================================
+
+  const register = async (
     name,
     email,
     password,
     role,
-  });
+    otp
+  ) => {
+    const response = await api.post(
+      "/auth/register",
+      {
+        name,
+        email,
+        password,
+        role,
+        otp,
+      }
+    );
 
-  const { token, user } = response.data;
+    const { token, user } =
+      response.data;
 
-  localStorage.setItem("hirehub_token", token);
-  setUser(user);
+    localStorage.setItem(
+      "hirehub_token",
+      token
+    );
 
-  return response.data;
-};
+    setUser(user);
 
-  // Logout
+    return response.data;
+  };
+
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+
   const logout = () => {
-    localStorage.removeItem("hirehub_token");
+    localStorage.removeItem(
+      "hirehub_token"
+    );
+
     setUser(null);
     setLoading(false);
   };
+
+  // ==========================================
+  // CONTEXT VALUE
+  // ==========================================
 
   const value = {
     user,
@@ -92,6 +152,10 @@ const register = async (name, email, password, role) => {
     </AuthContext.Provider>
   );
 };
+
+// ==========================================
+// USE AUTH HOOK
+// ==========================================
 
 export const useAuth = () => {
   return useContext(AuthContext);

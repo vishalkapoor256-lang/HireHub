@@ -5,11 +5,12 @@ import {
   Mail,
   LockKeyhole,
   BriefcaseBusiness,
-  UserPlus,
   ArrowRight,
+  ShieldCheck,
 } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext.jsx";
+import api from "../../services/api.js";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,7 +23,13 @@ const Register = () => {
     role: "jobseeker",
   });
 
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const [otpLoading, setOtpLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -32,12 +39,72 @@ const Register = () => {
       ...prev,
       [name]: value,
     }));
+
+    setError("");
+    setSuccess("");
   };
+
+  // ==========================================
+  // SEND OTP
+  // ==========================================
+
+  const handleSendOtp = async () => {
+    setError("");
+    setSuccess("");
+
+    if (!formData.email) {
+      setError("Please enter your email address.");
+      return;
+    }
+
+    setOtpLoading(true);
+
+    try {
+      const response = await api.post("/otp/generate", {
+        email: formData.email,
+        purpose: "registration",
+      });
+
+      setOtpSent(true);
+
+      setSuccess(
+        response.data?.message ||
+          "OTP sent successfully. Check your email."
+      );
+    } catch (error) {
+      console.error("SEND OTP ERROR:", error);
+
+      setError(
+        error.response?.data?.message ||
+          "Failed to send OTP. Please try again."
+      );
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  // ==========================================
+  // REGISTER
+  // ==========================================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setError("");
+    setSuccess("");
+
+    if (!otpSent) {
+      setError(
+        "Please verify your email with an OTP first."
+      );
+      return;
+    }
+
+    if (!otp || otp.length !== 6) {
+      setError("Please enter the 6-digit OTP.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -45,7 +112,8 @@ const Register = () => {
         formData.name,
         formData.email,
         formData.password,
-        formData.role
+        formData.role,
+        otp
       );
 
       navigate("/");
@@ -91,9 +159,10 @@ const Register = () => {
             </h1>
 
             <p>
-              Whether you're looking for your next opportunity or
-              searching for talented people, HireHub helps you
-              connect with the right people.
+              Whether you're looking for your next
+              opportunity or searching for talented
+              people, HireHub helps you connect with
+              the right people.
             </p>
 
           </div>
@@ -124,9 +193,19 @@ const Register = () => {
 
           </div>
 
+          {/* Error */}
+
           {error && (
             <div className="form-error auth-error">
               {error}
+            </div>
+          )}
+
+          {/* Success */}
+
+          {success && (
+            <div className="form-success auth-success">
+              {success}
             </div>
           )}
 
@@ -170,7 +249,13 @@ const Register = () => {
                 Email address
               </label>
 
-              <div className="auth-input-wrapper">
+              <div
+                className="auth-input-wrapper"
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                }}
+              >
 
                 <Mail size={18} />
 
@@ -187,7 +272,72 @@ const Register = () => {
 
               </div>
 
+              {/* Send OTP button */}
+
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                disabled={
+                  otpLoading ||
+                  !formData.email
+                }
+                className="auth-secondary-button"
+                style={{
+                  width: "100%",
+                  marginTop: "10px",
+                }}
+              >
+                {otpLoading
+                  ? "Sending OTP..."
+                  : otpSent
+                  ? "Resend OTP"
+                  : "Send OTP"}
+              </button>
+
             </div>
+
+            {/* OTP */}
+
+            {otpSent && (
+              <div className="form-group">
+
+                <label htmlFor="register-otp">
+                  Verification OTP
+                </label>
+
+                <div className="auth-input-wrapper">
+
+                  <ShieldCheck size={18} />
+
+                  <input
+                    id="register-otp"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    placeholder="Enter 6-digit OTP"
+                    value={otp}
+                    onChange={(e) => {
+                      const value =
+                        e.target.value.replace(
+                          /\D/g,
+                          ""
+                        );
+
+                      setOtp(value);
+                      setError("");
+                    }}
+                    required
+                    autoComplete="one-time-code"
+                  />
+
+                </div>
+
+                <small className="auth-helper-text">
+                  Enter the OTP sent to your email.
+                </small>
+
+              </div>
+            )}
 
             {/* Password */}
 
@@ -231,6 +381,8 @@ const Register = () => {
 
               <div className="auth-role-options">
 
+                {/* Job Seeker */}
+
                 <label
                   className={`auth-role-option ${
                     formData.role === "jobseeker"
@@ -243,20 +395,27 @@ const Register = () => {
                     type="radio"
                     name="role"
                     value="jobseeker"
-                    checked={formData.role === "jobseeker"}
+                    checked={
+                      formData.role === "jobseeker"
+                    }
                     onChange={handleChange}
                   />
 
                   <UserRound size={18} />
 
                   <span>
-                    <strong>Job Seeker</strong>
+                    <strong>
+                      Job Seeker
+                    </strong>
+
                     <small>
                       Find jobs and apply
                     </small>
                   </span>
 
                 </label>
+
+                {/* Recruiter */}
 
                 <label
                   className={`auth-role-option ${
@@ -270,14 +429,19 @@ const Register = () => {
                     type="radio"
                     name="role"
                     value="recruiter"
-                    checked={formData.role === "recruiter"}
+                    checked={
+                      formData.role === "recruiter"
+                    }
                     onChange={handleChange}
                   />
 
                   <BriefcaseBusiness size={18} />
 
                   <span>
-                    <strong>Recruiter</strong>
+                    <strong>
+                      Recruiter
+                    </strong>
+
                     <small>
                       Post jobs and hire talent
                     </small>
@@ -294,7 +458,10 @@ const Register = () => {
             <button
               type="submit"
               className="auth-submit"
-              disabled={loading}
+              disabled={
+                loading ||
+                !otpSent
+              }
             >
               {loading ? (
                 "Creating account..."
@@ -309,7 +476,9 @@ const Register = () => {
           </form>
 
           <div className="auth-divider">
-            <span>Already have an account?</span>
+            <span>
+              Already have an account?
+            </span>
           </div>
 
           <Link
@@ -320,8 +489,8 @@ const Register = () => {
           </Link>
 
           <p className="auth-terms">
-            By creating an account, you agree to provide accurate
-            information and use HireHub responsibly.
+            By creating an account, you agree to provide
+            accurate information and use HireHub responsibly.
           </p>
 
         </section>

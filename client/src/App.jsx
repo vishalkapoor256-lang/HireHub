@@ -14,6 +14,7 @@ import RecruiterDashboard from "./pages/RecruiterDashboard/RecruiterDashboard";
 import RecruiterCreateJob from "./pages/RecruiterCreateJob/RecruiterCreateJob";
 import RecruiterApplicants from "./pages/RecruiterApplicants/RecruiterApplicants";
 import JobseekerDashboard from "./pages/JobseekerDashboard/JobseekerDashboard";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 
 const App = () => {
   return (
@@ -47,6 +48,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<Register />} />
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
 
       <Footer />

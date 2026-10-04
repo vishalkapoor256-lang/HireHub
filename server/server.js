@@ -7,6 +7,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js"
 import jobRoutes from "./routes/jobRoutes.js"
 import applicationRoutes from "./routes/applicationRoutes.js"
+import otpRoutes from "./routes/otpRoutes.js"
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(helmet());
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use("/api/otp", otpRoutes);
 
 //Test route
 app.get("/", (req, res)=>{
