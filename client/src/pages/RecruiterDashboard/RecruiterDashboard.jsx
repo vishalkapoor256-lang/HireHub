@@ -11,6 +11,7 @@ import {
   CalendarDays,
   Building2,
   Eye,
+  Trash2,
 } from "lucide-react";
 
 import api from "../../services/api.js";
@@ -36,15 +37,9 @@ const RecruiterDashboard = () => {
 
         setJobs(response.data.jobs || []);
       } catch (error) {
-        console.error(
-          "Failed to fetch recruiter jobs:",
-          error
-        );
+        console.error("Failed to fetch recruiter jobs:", error);
 
-        setError(
-          error.response?.data?.message ||
-            "Failed to load your jobs."
-        );
+        setError(error.response?.data?.message || "Failed to load your jobs.");
       } finally {
         setLoading(false);
       }
@@ -55,17 +50,11 @@ const RecruiterDashboard = () => {
 
   const totalJobs = jobs.length;
 
-  const activeJobs = jobs.filter(
-    (job) => job.status === "published"
-  ).length;
+  const activeJobs = jobs.filter((job) => job.status === "published").length;
 
-  const draftJobs = jobs.filter(
-    (job) => job.status === "draft"
-  ).length;
+  const draftJobs = jobs.filter((job) => job.status === "draft").length;
 
-  const closedJobs = jobs.filter(
-    (job) => job.status === "closed"
-  ).length;
+  const closedJobs = jobs.filter((job) => job.status === "closed").length;
 
   const formatText = (value) => {
     if (!value) return "N/A";
@@ -85,6 +74,60 @@ const RecruiterDashboard = () => {
     });
   };
 
+  const handleDeleteJob = async (jobId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this job? This action cannot be undone.",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const token = localStorage.getItem("hirehub_token");
+
+      await api.delete(`/jobs/${jobId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
+    } catch (error) {
+      console.error("Failed to delete job:", error);
+
+      setError(error.response?.data?.message || "Failed to delete the job.");
+    }
+  };
+
+  const handleStatusChange = async (jobId, currentStatus) => {
+    const newStatus = currentStatus === "published" ? "closed" : "published";
+
+    try {
+      const token = localStorage.getItem("hirehub_token");
+
+      const response = await api.put(
+        `/jobs/${jobId}`,
+        {
+          status: newStatus,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const updatedJob = response.data.job;
+
+      setJobs((prevJobs) =>
+        prevJobs.map((job) => (job._id === jobId ? updatedJob : job)),
+      );
+    } catch (error) {
+      console.error("Failed to update job status:", error);
+
+      setError(error.response?.data?.message || "Failed to update job status.");
+    }
+  };
+
   if (loading) {
     return (
       <main className="recruiter-dashboard-page">
@@ -100,52 +143,37 @@ const RecruiterDashboard = () => {
 
   return (
     <main className="recruiter-dashboard-page">
-
       <div className="recruiter-dashboard-container">
-
         {/* Header */}
 
         <section className="recruiter-dashboard-header">
-
           <div>
             <span className="recruiter-dashboard-eyebrow">
               Recruiter Dashboard
             </span>
 
-            <h1>
-              Manage your hiring.
-            </h1>
+            <h1>Manage your hiring.</h1>
 
             <p>
-              Create jobs, manage applicants, and find the right
-              talent for your team.
+              Create jobs, manage applicants, and find the right talent for your
+              team.
             </p>
           </div>
 
-          <Link
-            to="/recruiter/jobs/create"
-            className="recruiter-create-button"
-          >
+          <Link to="/recruiter/jobs/create" className="recruiter-create-button">
             <Plus size={18} />
             Create Job
           </Link>
-
         </section>
 
         {/* Error */}
 
-        {error && (
-          <div className="recruiter-dashboard-error">
-            {error}
-          </div>
-        )}
+        {error && <div className="recruiter-dashboard-error">{error}</div>}
 
         {/* Statistics */}
 
         <section className="recruiter-dashboard-stats">
-
           <div className="recruiter-stat-card">
-
             <div className="recruiter-stat-icon blue">
               <BriefcaseBusiness size={21} />
             </div>
@@ -154,11 +182,9 @@ const RecruiterDashboard = () => {
               <span>Total Jobs</span>
               <strong>{totalJobs}</strong>
             </div>
-
           </div>
 
           <div className="recruiter-stat-card">
-
             <div className="recruiter-stat-icon green">
               <CheckCircle2 size={21} />
             </div>
@@ -167,11 +193,9 @@ const RecruiterDashboard = () => {
               <span>Active Jobs</span>
               <strong>{activeJobs}</strong>
             </div>
-
           </div>
 
           <div className="recruiter-stat-card">
-
             <div className="recruiter-stat-icon orange">
               <Clock3 size={21} />
             </div>
@@ -180,11 +204,9 @@ const RecruiterDashboard = () => {
               <span>Draft Jobs</span>
               <strong>{draftJobs}</strong>
             </div>
-
           </div>
 
           <div className="recruiter-stat-card">
-
             <div className="recruiter-stat-icon purple">
               <Users size={21} />
             </div>
@@ -193,23 +215,17 @@ const RecruiterDashboard = () => {
               <span>Closed Jobs</span>
               <strong>{closedJobs}</strong>
             </div>
-
           </div>
-
         </section>
 
         {/* Main Content */}
 
         <section className="recruiter-jobs-section">
-
           <div className="recruiter-section-header">
-
             <div>
               <h2>My Jobs</h2>
 
-              <p>
-                Manage the jobs you have posted on HireHub.
-              </p>
+              <p>Manage the jobs you have posted on HireHub.</p>
             </div>
 
             <Link
@@ -219,13 +235,10 @@ const RecruiterDashboard = () => {
               <Plus size={16} />
               Create Job
             </Link>
-
           </div>
 
           {jobs.length === 0 ? (
-
             <div className="recruiter-empty-state">
-
               <div className="recruiter-empty-icon">
                 <BriefcaseBusiness size={26} />
               </div>
@@ -233,8 +246,8 @@ const RecruiterDashboard = () => {
               <h3>You haven't posted any jobs yet</h3>
 
               <p>
-                Create your first job posting and start finding
-                qualified candidates.
+                Create your first job posting and start finding qualified
+                candidates.
               </p>
 
               <Link
@@ -244,28 +257,16 @@ const RecruiterDashboard = () => {
                 Create Your First Job
                 <ArrowRight size={16} />
               </Link>
-
             </div>
-
           ) : (
-
             <div className="recruiter-jobs-grid">
-
               {jobs.map((job) => (
-
-                <article
-                  className="recruiter-job-card"
-                  key={job._id}
-                >
-
+                <article className="recruiter-job-card" key={job._id}>
                   {/* Card Header */}
 
                   <div className="recruiter-job-card-header">
-
                     <div className="recruiter-company-logo">
-                      {job.companyName
-                        ?.charAt(0)
-                        ?.toUpperCase() || (
+                      {job.companyName?.charAt(0)?.toUpperCase() || (
                         <Building2 size={20} />
                       )}
                     </div>
@@ -275,23 +276,16 @@ const RecruiterDashboard = () => {
                     >
                       {formatText(job.status)}
                     </span>
-
                   </div>
 
                   {/* Job Information */}
 
                   <div className="recruiter-job-content">
+                    <h3>{job.title}</h3>
 
-                    <h3>
-                      {job.title}
-                    </h3>
-
-                    <p className="recruiter-company-name">
-                      {job.companyName}
-                    </p>
+                    <p className="recruiter-company-name">{job.companyName}</p>
 
                     <div className="recruiter-job-meta">
-
                       <span>
                         <MapPin size={14} />
                         {job.location}
@@ -299,41 +293,37 @@ const RecruiterDashboard = () => {
 
                       <span>
                         <BriefcaseBusiness size={14} />
-                        {formatText(
-                          job.employmentType
-                        )}
+                        {formatText(job.employmentType)}
                       </span>
 
                       <span>
                         <Building2 size={14} />
-                        {formatText(
-                          job.workplaceType
-                        )}
+                        {formatText(job.workplaceType)}
                       </span>
-
                     </div>
 
                     <div className="recruiter-job-posted">
-
                       <CalendarDays size={14} />
-
-                      Posted{" "}
-                      {formatDate(job.createdAt)}
-
+                      Posted {formatDate(job.createdAt)}
                     </div>
-
                   </div>
 
                   {/* Actions */}
 
                   <div className="recruiter-job-actions">
-
                     <Link
                       to={`/jobs/${job._id}`}
                       className="recruiter-view-job"
                     >
                       <Eye size={15} />
                       View Job
+                    </Link>
+
+                    <Link
+                      to={`/recruiter/jobs/${job._id}/edit`}
+                      className="recruiter-view-job"
+                    >
+                      Edit Job
                     </Link>
 
                     <Link
@@ -344,20 +334,33 @@ const RecruiterDashboard = () => {
                       Applicants
                     </Link>
 
+                    <button
+                      type="button"
+                      className="recruiter-status-button"
+                      onClick={() => handleStatusChange(job._id, job.status)}
+                    >
+                      {job.status === "published"
+                        ? "Close Job"
+                        : job.status === "closed"
+                          ? "Publish Job"
+                          : "Publish Job"}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="recruiter-delete-job"
+                      onClick={() => handleDeleteJob(job._id)}
+                    >
+                      <Trash2 size={15} />
+                      Delete
+                    </button>
                   </div>
-
                 </article>
-
               ))}
-
             </div>
-
           )}
-
         </section>
-
       </div>
-
     </main>
   );
 };

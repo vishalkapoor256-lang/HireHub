@@ -15,6 +15,7 @@ import RecruiterCreateJob from "./pages/RecruiterCreateJob/RecruiterCreateJob";
 import RecruiterApplicants from "./pages/RecruiterApplicants/RecruiterApplicants";
 import JobseekerDashboard from "./pages/JobseekerDashboard/JobseekerDashboard";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import RecruiterEditJob from "./pages/RecruiterEditJob/RecruiterEditJob";
 
 const App = () => {
   return (
@@ -42,7 +43,10 @@ const App = () => {
 
         <Route path="/recruiter/jobs/create" element={<RecruiterCreateJob />} />
 
+        <Route path="/recruiter/jobs/:jobId/edit" element={<RecruiterEditJob />} />
+
         <Route path="/recruiter/jobs/:jobId/applicants" element={<RecruiterApplicants />} />
+        
         </Route>
 
         <Route path="/login" element={<Login />} />
