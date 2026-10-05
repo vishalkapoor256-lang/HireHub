@@ -535,3 +535,20 @@
     height: 38px;
   }
 }
+
+.recommended-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.recommended-nav-link svg {
+  color: var(--primary);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.recommended-nav-link:hover svg {
+  transform: scale(1.15);
+}

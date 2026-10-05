@@ -1,0 +1,395 @@
+.recommended-jobs-page {
+  min-height: calc(100vh - 140px);
+  background: var(--background-soft);
+  padding: 40px 20px 60px;
+}
+
+.recommended-jobs-container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+}
+
+/* Header */
+
+.recommended-header {
+  margin-bottom: 28px;
+}
+
+.recommended-title-icon {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.recommended-header h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.recommended-header p {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+/* Loading */
+
+.recommended-loading {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.recommended-spinner {
+  width: 38px;
+  height: 38px;
+  margin-bottom: 14px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: recommended-spin 0.8s linear infinite;
+}
+
+@keyframes recommended-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error */
+
+.recommended-error {
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--danger);
+  text-align: center;
+}
+
+/* Empty */
+
+.recommended-empty {
+  padding: 60px 20px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.recommended-empty-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.recommended-empty h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 22px;
+}
+
+.recommended-empty p {
+  max-width: 500px;
+  margin: 10px auto 22px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.recommended-profile-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.recommended-profile-button:hover {
+  background: var(--primary-dark);
+}
+
+/* List */
+
+.recommended-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Card */
+
+.recommended-card {
+  padding: 22px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.recommended-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-md);
+}
+
+.recommended-card-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Company Logo */
+
+.recommended-company-logo {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--background-muted);
+  color: var(--primary);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.recommended-company-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Job Info */
+
+.recommended-job-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.recommended-job-info h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.recommended-company {
+  margin: 5px 0 10px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.recommended-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.recommended-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+/* Match Score */
+
+.match-score {
+  min-width: 75px;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  background: var(--primary-light);
+  text-align: center;
+}
+
+.match-score span {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--primary-dark);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.match-score strong {
+  color: var(--primary);
+  font-size: 20px;
+}
+
+/* Bottom */
+
+.recommended-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.matched-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.matched-skills span {
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: var(--background-muted);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* Recommended Skills */
+
+.recommended-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.skill-group {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-group-label {
+  padding-top: 5px;
+  color: var(--success);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.missing-label {
+  color: var(--warning);
+}
+
+.missing-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.missing-skills span {
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: var(--warning);
+  font-size: 12px;
+}
+
+.view-job-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 15px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.view-job-button:hover {
+  background: var(--primary-dark);
+}
+
+/* Responsive */
+
+@media (max-width: 700px) {
+  .recommended-jobs-page {
+    padding: 28px 15px 45px;
+  }
+
+  .recommended-header h1 {
+    font-size: 27px;
+  }
+
+  .recommended-card {
+    padding: 18px;
+  }
+
+  .recommended-card-main {
+    flex-wrap: wrap;
+  }
+
+  .recommended-job-info {
+    width: calc(100% - 68px);
+  }
+
+  .match-score {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .recommended-card-bottom {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .view-job-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 450px) {
+  .recommended-job-info {
+    width: 100%;
+  }
+
+  .recommended-company-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .recommended-header h1 {
+    font-size: 24px;
+  }
+}

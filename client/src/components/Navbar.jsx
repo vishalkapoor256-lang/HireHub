@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   Menu,
   X,
+  Sparkles,
 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext.jsx";
@@ -137,6 +138,13 @@ const Navbar = () => {
 
                   <Link to="/saved-jobs" onClick={closeMobileMenu}>
                     Saved Jobs
+                  </Link>
+
+                  <Link to="/recommended-jobs" onClick={closeMobileMenu}
+                  className="recommended-nav-link">
+                    <Sparkles size={16} />
+                    <span> Recommended Jobs </span>
+                    
                   </Link>
                 </>
               )}

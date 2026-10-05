@@ -10,6 +10,7 @@ import applicationRoutes from "./routes/applicationRoutes.js"
 import otpRoutes from "./routes/otpRoutes.js"
 import profileRoutes from "./routes/profileRoutes.js"
 import savedJobRoutes from "./routes/savedJobRoutes.js"
+import jobMatchingRoutes from "./routes/jobMatchingRoutes.js"
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/otp", otpRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/saved-jobs", savedJobRoutes);
+app.use("/api/job-matching", jobMatchingRoutes);
 
 //Test route
 app.get("/", (req, res)=>{
