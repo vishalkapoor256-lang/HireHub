@@ -19,6 +19,7 @@ import RecruiterEditJob from "./pages/RecruiterEditJob/RecruiterEditJob";
 import Profile from "./pages/Profile/Profile";
 import SavedJobs from "./pages/SavedJobs/SavedJobs";
 import RecommendedJobs from "./pages/RecommendedJobs/RecommendedJobs";
+import ResumeAnalyzer from "./pages/ResumeAnalyzer/ResumeAnalyzer";
 
 const App = () => {
   return (
@@ -43,6 +44,8 @@ const App = () => {
           <Route path="/saved-jobs" element={<SavedJobs />} />
 
           <Route path="/recommended-jobs" element={<RecommendedJobs />} />
+
+          <Route path="/resume-analyzer" element={<ResumeAnalyzer />} />
 
         </Route>
 

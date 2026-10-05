@@ -13,6 +13,7 @@ import {
   Send,
   Users,
   Bookmark,
+  FileSearch,
 } from "lucide-react";
 
 import api from "../../services/api.js";
@@ -899,7 +900,16 @@ const JobDetails = () => {
         : "Save Job"}
     </span>
   </button>
+
+    
 )}
+<Link
+  to={`/resume-analyzer?jobId=${job._id}`}
+  className="analyze-resume-button"
+>
+  <FileSearch size={17} />
+  Analyze Resume
+</Link>
 
                   </form>
 
