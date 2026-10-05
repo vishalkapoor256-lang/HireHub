@@ -56,16 +56,11 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-
         {/* =========================================
             LOGO
         ========================================= */}
 
-        <Link
-          to="/"
-          className="navbar-logo"
-          onClick={closeMobileMenu}
-        >
+        <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
           <span className="navbar-logo-icon">
             <BriefcaseBusiness size={21} />
           </span>
@@ -74,7 +69,6 @@ const Navbar = () => {
             Hire<span>Hub</span>
           </span>
         </Link>
-
 
         {/* =========================================
             SEARCH
@@ -90,7 +84,6 @@ const Navbar = () => {
           />
         </div>
 
-
         {/* =========================================
             MOBILE MENU BUTTON
         ========================================= */}
@@ -102,43 +95,25 @@ const Navbar = () => {
           aria-label="Toggle navigation menu"
           aria-expanded={mobileMenuOpen}
         >
-          {mobileMenuOpen ? (
-            <X size={21} />
-          ) : (
-            <Menu size={21} />
-          )}
+          {mobileMenuOpen ? <X size={21} /> : <Menu size={21} />}
         </button>
-
 
         {/* =========================================
             NAVIGATION
         ========================================= */}
 
-        <div
-          className={`navbar-links ${
-            mobileMenuOpen ? "mobile-open" : ""
-          }`}
-        >
-
+        <div className={`navbar-links ${mobileMenuOpen ? "mobile-open" : ""}`}>
           {/* Home */}
 
-          <Link
-            to="/"
-            onClick={closeMobileMenu}
-          >
+          <Link to="/" onClick={closeMobileMenu}>
             Home
           </Link>
 
-
           {/* Find Jobs */}
 
-          <Link
-            to="/jobs"
-            onClick={closeMobileMenu}
-          >
+          <Link to="/jobs" onClick={closeMobileMenu}>
             Find Jobs
           </Link>
-
 
           {/* =========================================
               AUTHENTICATED USER
@@ -146,29 +121,25 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <>
-
               {/* =====================================
                   JOB SEEKER
               ===================================== */}
 
               {user?.role === "jobseeker" && (
                 <>
-                  <Link
-                    to="/dashboard"
-                    onClick={closeMobileMenu}
-                  >
+                  <Link to="/dashboard" onClick={closeMobileMenu}>
                     Dashboard
                   </Link>
 
-                  <Link
-                    to="/my-applications"
-                    onClick={closeMobileMenu}
-                  >
+                  <Link to="/my-applications" onClick={closeMobileMenu}>
                     My Applications
+                  </Link>
+
+                  <Link to="/saved-jobs" onClick={closeMobileMenu}>
+                    Saved Jobs
                   </Link>
                 </>
               )}
-
 
               {/* =====================================
                   RECRUITER
@@ -186,23 +157,21 @@ const Navbar = () => {
                 </Link>
               )}
 
-
               {/* =====================================
                   USER
               ===================================== */}
 
-              <div className="navbar-user">
-
+              <Link
+                to="/profile"
+                className="navbar-user"
+                onClick={closeMobileMenu}
+              >
                 <span className="navbar-user-icon">
                   <User size={16} />
                 </span>
 
-                <span className="navbar-user-name">
-                  {user?.name || "User"}
-                </span>
-
-              </div>
-
+                <span className="navbar-user-name">{user?.name || "User"}</span>
+              </Link>
 
               {/* =====================================
                   LOGOUT
@@ -217,10 +186,8 @@ const Navbar = () => {
 
                 <span>Logout</span>
               </button>
-
             </>
           ) : (
-
             /* =======================================
                LOGGED OUT USER
             ======================================= */
@@ -236,7 +203,6 @@ const Navbar = () => {
                 Login
               </Link>
 
-
               {/* Get Started */}
 
               <Link
@@ -248,7 +214,6 @@ const Navbar = () => {
               </Link>
             </>
           )}
-
         </div>
       </div>
     </nav>

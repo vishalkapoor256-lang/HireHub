@@ -8593,3 +8593,112 @@ select {
     height: 38px;
   }
 }
+
+/* Already Applied */
+
+.job-already-applied {
+  padding: 28px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--background-soft);
+  text-align: center;
+}
+
+.job-already-applied-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.job-already-applied h3 {
+  margin: 0 0 7px;
+  color: var(--text-primary);
+  font-size: 18px;
+}
+
+.job-already-applied p {
+  margin: 0 auto 20px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.job-view-application-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 11px 15px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.job-view-application-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+/* =========================
+   SAVE JOB BUTTON
+========================= */
+
+.save-job-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 46px;
+  padding: 0 18px;
+
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-md);
+
+  background: var(--background);
+  color: var(--text-primary);
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save-job-button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.save-job-button.saved {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.save-job-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.save-job-button svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .save-job-button {
+    width: 100%;
+  }
+}

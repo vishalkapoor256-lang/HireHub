@@ -280,3 +280,53 @@ export const updateApplicationStatus = async (req, res) => {
     });
   }
 };
+
+export const checkApplication = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+
+    // Validate Job ID
+    if (!mongoose.Types.ObjectId.isValid(jobId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid job ID",
+      });
+    }
+
+    // Check whether the logged-in user has already applied
+    const application = await Application.findOne({
+      job: jobId,
+      applicant: req.userId,
+    }).populate(
+      "job",
+      "title companyName location"
+    );
+
+    // No application found
+    if (!application) {
+      return res.status(200).json({
+        success: true,
+        applied: false,
+        application: null,
+      });
+    }
+
+    // Application found
+    return res.status(200).json({
+      success: true,
+      applied: true,
+      application,
+    });
+  } catch (error) {
+    console.error(
+      "Check application error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Server error while checking application status",
+    });
+  }
+};

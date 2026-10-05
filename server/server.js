@@ -8,6 +8,8 @@ import authRoutes from "./routes/authRoutes.js"
 import jobRoutes from "./routes/jobRoutes.js"
 import applicationRoutes from "./routes/applicationRoutes.js"
 import otpRoutes from "./routes/otpRoutes.js"
+import profileRoutes from "./routes/profileRoutes.js"
+import savedJobRoutes from "./routes/savedJobRoutes.js"
 
 dotenv.config();
 
@@ -25,6 +27,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/otp", otpRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/saved-jobs", savedJobRoutes);
 
 //Test route
 app.get("/", (req, res)=>{

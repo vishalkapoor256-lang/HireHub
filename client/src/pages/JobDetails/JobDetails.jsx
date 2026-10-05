@@ -12,6 +12,7 @@ import {
   MapPin,
   Send,
   Users,
+  Bookmark,
 } from "lucide-react";
 
 import api from "../../services/api.js";
@@ -25,12 +26,24 @@ const JobDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [isSaved, setIsSaved] = useState(false);
+  const [checkingSaved, setCheckingSaved] = useState(false);
+
   const [resumeUrl, setResumeUrl] = useState("");
   const [coverLetter, setCoverLetter] = useState("");
 
   const [applying, setApplying] = useState(false);
   const [applicationError, setApplicationError] = useState("");
   const [applicationSuccess, setApplicationSuccess] = useState("");
+
+  // Existing application check
+  const [hasApplied, setHasApplied] = useState(false);
+  const [checkingApplication, setCheckingApplication] =
+    useState(false);
+
+  // =========================================
+  // FETCH JOB
+  // =========================================
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -56,6 +69,95 @@ const JobDetails = () => {
     fetchJob();
   }, [id]);
 
+  // =========================================
+  // CHECK EXISTING APPLICATION
+  // =========================================
+
+  useEffect(() => {
+    const checkExistingApplication = async () => {
+      // Only jobseekers need application checking
+      if (!user || user.role !== "jobseeker") {
+        setHasApplied(false);
+        setCheckingApplication(false);
+        return;
+      }
+
+      try {
+        setCheckingApplication(true);
+
+        const token =
+          localStorage.getItem("hirehub_token");
+
+        const response = await api.get(
+          `/applications/check/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setHasApplied(
+          response.data.applied === true
+        );
+      } catch (error) {
+        console.error(
+          "Failed to check application:",
+          error
+        );
+
+        // If the check fails, allow the form to remain available.
+        setHasApplied(false);
+      } finally {
+        setCheckingApplication(false);
+      }
+    };
+
+    checkExistingApplication();
+  }, [id, user]);
+
+  useEffect(() => {
+  const checkSavedJob = async () => {
+    if (!user || user.role !== "jobseeker") {
+      setIsSaved(false);
+      setCheckingSaved(false);
+      return;
+    }
+
+    try {
+      setCheckingSaved(true);
+
+      const token = localStorage.getItem("hirehub_token");
+
+      const response = await api.get(
+        `/saved-jobs/check/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setIsSaved(response.data.saved === true);
+    } catch (error) {
+      console.error(
+        "Failed to check saved job:",
+        error
+      );
+
+      setIsSaved(false);
+    } finally {
+      setCheckingSaved(false);
+    }
+  };
+
+  checkSavedJob();
+}, [id, user]);
+
+  // =========================================
+  // APPLY FOR JOB
+  // =========================================
+
   const handleApply = async (e) => {
     e.preventDefault();
 
@@ -64,7 +166,8 @@ const JobDetails = () => {
     setApplying(true);
 
     try {
-      const token = localStorage.getItem("hirehub_token");
+      const token =
+        localStorage.getItem("hirehub_token");
 
       await api.post(
         `/applications/${id}`,
@@ -85,8 +188,14 @@ const JobDetails = () => {
 
       setResumeUrl("");
       setCoverLetter("");
+
+      // Immediately update UI
+      setHasApplied(true);
     } catch (error) {
-      console.error("Application error:", error);
+      console.error(
+        "Application error:",
+        error
+      );
 
       setApplicationError(
         error.response?.data?.message ||
@@ -97,16 +206,29 @@ const JobDetails = () => {
     }
   };
 
+  // =========================================
+  // FORMAT TEXT
+  // =========================================
+
   const formatText = (value) => {
     if (!value) return "";
 
     return value
       .replace(/-/g, " ")
-      .replace(/\b\w/g, (letter) => letter.toUpperCase());
+      .replace(/\b\w/g, (letter) =>
+        letter.toUpperCase()
+      );
   };
 
+  // =========================================
+  // FORMAT SALARY
+  // =========================================
+
   const formatSalary = () => {
-    if (job.salaryMin == null && job.salaryMax == null) {
+    if (
+      job.salaryMin == null &&
+      job.salaryMax == null
+    ) {
       return "Salary not disclosed";
     }
 
@@ -124,63 +246,132 @@ const JobDetails = () => {
     ) {
       return `${currency}${formatNumber(
         job.salaryMin
-      )} - ${currency}${formatNumber(job.salaryMax)}`;
+      )} - ${currency}${formatNumber(
+        job.salaryMax
+      )}`;
     }
 
     if (job.salaryMin != null) {
-      return `From ${currency}${formatNumber(job.salaryMin)}`;
+      return `From ${currency}${formatNumber(
+        job.salaryMin
+      )}`;
     }
 
-    return `Up to ${currency}${formatNumber(job.salaryMax)}`;
+    return `Up to ${currency}${formatNumber(
+      job.salaryMax
+    )}`;
   };
+
+  // =========================================
+  // FORMAT DATE
+  // =========================================
 
   const formatDate = (date) => {
     if (!date) return "";
 
-    return new Date(date).toLocaleDateString("en-IN", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
+    return new Date(date).toLocaleDateString(
+      "en-IN",
+      {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }
+    );
   };
+
+  // =========================================
+  // CHECK DEADLINE
+  // =========================================
 
   const isDeadlinePassed = () => {
-    if (!job.applicationDeadline) return false;
+    if (!job.applicationDeadline) {
+      return false;
+    }
 
-    return new Date(job.applicationDeadline) < new Date();
+    return (
+      new Date(job.applicationDeadline) <
+      new Date()
+    );
   };
+
+  const handleSaveJob = async () => {
+  if (!user || user.role !== "jobseeker") {
+    return;
+  }
+
+  try {
+    const token =
+      localStorage.getItem("hirehub_token");
+
+    if (isSaved) {
+      await api.delete(
+        `/saved-jobs/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setIsSaved(false);
+    } else {
+      await api.post(
+        `/saved-jobs/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setIsSaved(true);
+    }
+  } catch (error) {
+    console.error(
+      "Failed to save/unsave job:",
+      error
+    );
+  }
+};
+
+  // =========================================
+  // LOADING STATE
+  // =========================================
 
   if (loading) {
     return (
       <main className="job-details-page">
-
         <div className="job-details-loading">
-
           <div className="jobs-loader"></div>
 
-          <h3>Loading job details...</h3>
+          <h3>
+            Loading job details...
+          </h3>
 
           <p>
             Please wait while we load this opportunity.
           </p>
-
         </div>
-
       </main>
     );
   }
 
+  // =========================================
+  // ERROR STATE
+  // =========================================
+
   if (error) {
     return (
       <main className="job-details-page">
-
         <div className="job-details-state">
-
           <div className="job-details-state-icon">
             <Briefcase size={25} />
           </div>
 
-          <h2>Unable to load job</h2>
+          <h2>
+            Unable to load job
+          </h2>
 
           <p>{error}</p>
 
@@ -191,24 +382,26 @@ const JobDetails = () => {
             <ArrowLeft size={17} />
             Back to Jobs
           </Link>
-
         </div>
-
       </main>
     );
   }
 
+  // =========================================
+  // JOB NOT FOUND
+  // =========================================
+
   if (!job) {
     return (
       <main className="job-details-page">
-
         <div className="job-details-state">
-
           <div className="job-details-state-icon">
             <Briefcase size={25} />
           </div>
 
-          <h2>Job not found</h2>
+          <h2>
+            Job not found
+          </h2>
 
           <p>
             This job may have been removed or is no longer
@@ -222,21 +415,24 @@ const JobDetails = () => {
             <ArrowLeft size={17} />
             Back to Jobs
           </Link>
-
         </div>
-
       </main>
     );
   }
 
-  const deadlinePassed = isDeadlinePassed();
+  const deadlinePassed =
+    isDeadlinePassed();
+
+  // =========================================
+  // MAIN UI
+  // =========================================
 
   return (
     <main className="job-details-page">
 
-      {/* Back */}
-
       <div className="job-details-container">
+
+        {/* Back */}
 
         <Link
           to="/jobs"
@@ -268,7 +464,9 @@ const JobDetails = () => {
             <div className="job-details-badges">
 
               <span className="job-details-badge">
-                {formatText(job.workplaceType)}
+                {formatText(
+                  job.workplaceType
+                )}
               </span>
 
               {job.status === "published" && (
@@ -280,7 +478,9 @@ const JobDetails = () => {
 
             </div>
 
-            <h1>{job.title}</h1>
+            <h1>
+              {job.title}
+            </h1>
 
             <p className="job-details-company">
               {job.companyName}
@@ -295,12 +495,16 @@ const JobDetails = () => {
 
               <span>
                 <Briefcase size={16} />
-                {formatText(job.employmentType)}
+                {formatText(
+                  job.employmentType
+                )}
               </span>
 
               <span>
                 <Clock3 size={16} />
-                {formatText(job.experienceLevel)}
+                {formatText(
+                  job.experienceLevel
+                )}
               </span>
 
             </div>
@@ -313,7 +517,7 @@ const JobDetails = () => {
 
         <div className="job-details-layout">
 
-          {/* Left Content */}
+          {/* LEFT */}
 
           <div className="job-details-main">
 
@@ -329,7 +533,10 @@ const JobDetails = () => {
 
                 <div>
                   <span>Salary</span>
-                  <strong>{formatSalary()}</strong>
+
+                  <strong>
+                    {formatSalary()}
+                  </strong>
                 </div>
 
               </div>
@@ -342,8 +549,11 @@ const JobDetails = () => {
 
                 <div>
                   <span>Job Type</span>
+
                   <strong>
-                    {formatText(job.employmentType)}
+                    {formatText(
+                      job.employmentType
+                    )}
                   </strong>
                 </div>
 
@@ -357,6 +567,7 @@ const JobDetails = () => {
 
                 <div>
                   <span>Openings</span>
+
                   <strong>
                     {job.openings || 1}
                   </strong>
@@ -375,7 +586,9 @@ const JobDetails = () => {
 
                   <strong>
                     {job.applicationDeadline
-                      ? formatDate(job.applicationDeadline)
+                      ? formatDate(
+                          job.applicationDeadline
+                        )
                       : "Not specified"}
                   </strong>
                 </div>
@@ -388,7 +601,9 @@ const JobDetails = () => {
 
             <section className="job-details-section">
 
-              <h2>About the Job</h2>
+              <h2>
+                About the Job
+              </h2>
 
               <p className="job-description">
                 {job.description}
@@ -401,15 +616,21 @@ const JobDetails = () => {
             {job.skills?.length > 0 && (
               <section className="job-details-section">
 
-                <h2>Skills & Technologies</h2>
+                <h2>
+                  Skills & Technologies
+                </h2>
 
                 <div className="job-details-skills">
 
-                  {job.skills.map((skill, index) => (
-                    <span key={`${skill}-${index}`}>
-                      {skill}
-                    </span>
-                  ))}
+                  {job.skills.map(
+                    (skill, index) => (
+                      <span
+                        key={`${skill}-${index}`}
+                      >
+                        {skill}
+                      </span>
+                    )
+                  )}
 
                 </div>
 
@@ -421,15 +642,23 @@ const JobDetails = () => {
             {job.requirements?.length > 0 && (
               <section className="job-details-section">
 
-                <h2>Requirements</h2>
+                <h2>
+                  Requirements
+                </h2>
 
                 <ul className="job-details-list">
 
                   {job.requirements.map(
-                    (requirement, index) => (
+                    (
+                      requirement,
+                      index
+                    ) => (
                       <li key={index}>
                         <CheckCircle2 size={17} />
-                        <span>{requirement}</span>
+
+                        <span>
+                          {requirement}
+                        </span>
                       </li>
                     )
                   )}
@@ -444,15 +673,23 @@ const JobDetails = () => {
             {job.responsibilities?.length > 0 && (
               <section className="job-details-section">
 
-                <h2>Responsibilities</h2>
+                <h2>
+                  Responsibilities
+                </h2>
 
                 <ul className="job-details-list">
 
                   {job.responsibilities.map(
-                    (responsibility, index) => (
+                    (
+                      responsibility,
+                      index
+                    ) => (
                       <li key={index}>
                         <CheckCircle2 size={17} />
-                        <span>{responsibility}</span>
+
+                        <span>
+                          {responsibility}
+                        </span>
                       </li>
                     )
                   )}
@@ -464,18 +701,20 @@ const JobDetails = () => {
 
           </div>
 
-          {/* Right Sidebar */}
+          {/* RIGHT SIDEBAR */}
 
           <aside className="job-details-sidebar">
 
-            {/* Application */}
+            {/* Jobseeker Application */}
 
             {user?.role === "jobseeker" && (
               <section className="job-apply-card">
 
                 <div className="job-apply-card-header">
 
-                  <h2>Apply for this job</h2>
+                  <h2>
+                    Apply for this job
+                  </h2>
 
                   <p>
                     Take the next step in your career.
@@ -483,7 +722,57 @@ const JobDetails = () => {
 
                 </div>
 
-                {deadlinePassed ? (
+                {/* Checking */}
+
+                {checkingApplication ? (
+                  <div className="job-closed-message">
+
+                    <Clock3 size={22} />
+
+                    <strong>
+                      Checking application status...
+                    </strong>
+
+                    <p>
+                      Please wait while we check your
+                      application.
+                    </p>
+
+                  </div>
+
+                ) : hasApplied ? (
+
+                  /* Already Applied */
+
+                  <div className="job-already-applied">
+
+                    <div className="job-already-applied-icon">
+                      <CheckCircle2 size={28} />
+                    </div>
+
+                    <h3>
+                      Already Applied
+                    </h3>
+
+                    <p>
+                      You have already submitted an
+                      application for this position.
+                    </p>
+
+                    <Link
+                      to="/my-applications"
+                      className="job-view-application-button"
+                    >
+                      View My Applications
+                      <ArrowRight size={16} />
+                    </Link>
+
+                  </div>
+
+                ) : deadlinePassed ? (
+
+                  /* Deadline Passed */
+
                   <div className="job-closed-message">
 
                     <CalendarDays size={22} />
@@ -498,7 +787,11 @@ const JobDetails = () => {
                     </p>
 
                   </div>
+
                 ) : (
+
+                  /* Application Form */
+
                   <form
                     className="job-application-form"
                     onSubmit={handleApply}
@@ -512,8 +805,11 @@ const JobDetails = () => {
 
                     {applicationSuccess && (
                       <div className="application-alert success">
+
                         <CheckCircle2 size={17} />
+
                         {applicationSuccess}
+
                       </div>
                     )}
 
@@ -529,7 +825,9 @@ const JobDetails = () => {
                         placeholder="https://drive.google.com/..."
                         value={resumeUrl}
                         onChange={(e) =>
-                          setResumeUrl(e.target.value)
+                          setResumeUrl(
+                            e.target.value
+                          )
                         }
                         required
                       />
@@ -552,7 +850,9 @@ const JobDetails = () => {
                         placeholder="Tell the recruiter why you're a good fit..."
                         value={coverLetter}
                         onChange={(e) =>
-                          setCoverLetter(e.target.value)
+                          setCoverLetter(
+                            e.target.value
+                          )
                         }
                         required
                       />
@@ -564,6 +864,7 @@ const JobDetails = () => {
                       className="job-apply-button"
                       disabled={applying}
                     >
+
                       <Send size={17} />
 
                       {applying
@@ -576,7 +877,32 @@ const JobDetails = () => {
 
                     </button>
 
+                    {user?.role === "jobseeker" && (
+  <button
+    type="button"
+    className={`save-job-button ${
+      isSaved ? "saved" : ""
+    }`}
+    onClick={handleSaveJob}
+    disabled={checkingSaved}
+  >
+    <Bookmark
+      size={18}
+      fill={isSaved ? "currentColor" : "none"}
+    />
+
+    <span>
+      {checkingSaved
+        ? "Checking..."
+        : isSaved
+        ? "Saved"
+        : "Save Job"}
+    </span>
+  </button>
+)}
+
                   </form>
+
                 )}
 
               </section>
@@ -591,7 +917,9 @@ const JobDetails = () => {
                   <Briefcase size={22} />
                 </div>
 
-                <h3>Recruiter Account</h3>
+                <h3>
+                  Recruiter Account
+                </h3>
 
                 <p>
                   Recruiter accounts cannot apply for jobs.
@@ -609,7 +937,9 @@ const JobDetails = () => {
 
             <section className="job-summary-card">
 
-              <h3>Job Summary</h3>
+              <h3>
+                Job Summary
+              </h3>
 
               <div className="job-summary-item">
 
@@ -617,7 +947,10 @@ const JobDetails = () => {
 
                 <div>
                   <span>Location</span>
-                  <strong>{job.location}</strong>
+
+                  <strong>
+                    {job.location}
+                  </strong>
                 </div>
 
               </div>
@@ -628,8 +961,11 @@ const JobDetails = () => {
 
                 <div>
                   <span>Experience</span>
+
                   <strong>
-                    {formatText(job.experienceLevel)}
+                    {formatText(
+                      job.experienceLevel
+                    )}
                   </strong>
                 </div>
 
@@ -641,8 +977,11 @@ const JobDetails = () => {
 
                 <div>
                   <span>Workplace</span>
+
                   <strong>
-                    {formatText(job.workplaceType)}
+                    {formatText(
+                      job.workplaceType
+                    )}
                   </strong>
                 </div>
 
@@ -654,7 +993,10 @@ const JobDetails = () => {
                   <CalendarDays size={17} />
 
                   <div>
-                    <span>Apply Before</span>
+                    <span>
+                      Apply Before
+                    </span>
+
                     <strong>
                       {formatDate(
                         job.applicationDeadline
